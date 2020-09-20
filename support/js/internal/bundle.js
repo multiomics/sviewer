@@ -23,7 +23,7 @@ Annotation = class Annotation {
 	this.C_TERMINUS = this.ChemistryConstants.O + this.ChemistryConstants.H;
 this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 	this.A_ION_TERMINUS = this.B_ION_TERMINUS - this.ChemistryConstants.C - this.ChemistryConstants.O; // wiki
-	this.C_ION_TERMINUS = 4 * this.ChemistryConstants.H + this.ChemistryConstants.N - this.ChemistryConstants.Proton; 
+	this.C_ION_TERMINUS = 4 * this.ChemistryConstants.H + this.ChemistryConstants.N - this.ChemistryConstants.Proton;
 
 	this.Y_ION_TERMINUS = this.ChemistryConstants.Proton + 2* this.ChemistryConstants.H + this.ChemistryConstants.O;
 	this.X_ION_TERMINUS = this.ChemistryConstants.Proton + 2* this.ChemistryConstants.H + this.ChemistryConstants.O;
@@ -76,8 +76,8 @@ this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 		this.response["isPPM"] = this.transformIsPPM(request);
 		this.response["precursorMz"] = this.calculatePrecursorMZ(request.sequence, request.precursorCharge, this.mods);
 		this.response["precursorMass"] = this.calculatePrecursorMass(request.sequence, this.mods);
-		this.response["fragments"] = this.calculateFragments(request["sequence"], 
-			request["precursorCharge"], 
+		this.response["fragments"] = this.calculateFragments(request["sequence"],
+			request["precursorCharge"],
 			this.mods,
 			request["fragmentTypes"]) ;
 		this.allMassOffset = this.calculateAllMassOffset(
@@ -108,7 +108,7 @@ this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 					"modification": {
 						"deltaElement": null,
 						"deltaMass": 0 + m,
-						"site": i 
+						"site": i
 					},
 					"name": e
 				});
@@ -118,7 +118,7 @@ this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 		return this.allMassOffset.concat(seq_part);
 
 	}
-	
+
 
 	fakeAPI(){
 		return{
@@ -185,7 +185,7 @@ this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 
 	}
 	generateAminoAcids(sequence, mods){
-		var r = sequence.split(""); // 
+		var r = sequence.split(""); //
 		r = r.map((e, i) => {
 			let possibleMod = mods.filter(e => {return e.index ==i});
 			let m = this.calculateAllMassOffset(possibleMod) ;
@@ -196,7 +196,7 @@ this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 					"modification": {
 						"deltaElement": null,
 						"deltaMass": 0 + m,
-						"site": i 
+						"site": i
 					},
 					"name": e
 				});
@@ -285,8 +285,8 @@ this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 					element["charge"] = c;
 					const allowedMods = mods.filter((m) => { return m.index <= i + 1; });
 					const modMass = this.calculateAllMassOffset(allowedMods);
-					element["mz"] = (subPeptideMass + 
-						modMass + 
+					element["mz"] = (subPeptideMass +
+						modMass +
 						this.B_ION_TERMINUS +  // already charged
 						(c-1) *this.ChemistryConstants.Proton ) /
 						c ;
@@ -304,8 +304,8 @@ this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 					element["charge"] = c;
 					const allowedMods = mods.filter((m) => { return m.index >= i + 1; });
 					const modMass = this.calculateAllMassOffset(allowedMods);
-					element["mz"] = (subPeptideMass + 
-						modMass + 
+					element["mz"] = (subPeptideMass +
+						modMass +
 						this.Y_ION_TERMINUS +  // already charged
 						(c-1) *this.ChemistryConstants.Proton ) /
 						c ;
@@ -412,6 +412,11 @@ UsiResponse = class UsiResponse {
         this.aMz = JSON.parse(response.ms2peaks).map((a) => (a[0]));
         this.aInt = JSON.parse(response.ms2peaks).map((a) => (a[1]));
         break;
+      case 'mslookup':
+        this.sequence = response.pepSequence;
+        this.precursorCharge = response.precursorCharge;
+        this.aMz = response.masses;
+        this.aInt = response.intensities;
       default:
         //
         break;
