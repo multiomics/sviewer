@@ -35,10 +35,12 @@
     <link href="support/css/external/Montserrat.css" rel="stylesheet">
     <link href="support/css/external/Open+Sans.css" rel="stylesheet">
     <link href="support/css/external/Inconsolata.css" rel="stylesheet">
-    <link href="support/css/internal/PeptideAnnotator.css" rel="stylesheet">
+    <!-- <link href="support/css/internal/PeptideAnnotator.css" rel="stylesheet"> -->
+    <link href="support/css/internal/PeptideAnnotatorRefine.css" rel="stylesheet">
+
   </head>
   <body>
-    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <!-- <nav class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="navbar-header">
         <a class="navbar-brand">
           Universal Spectrum explorer
@@ -48,23 +50,26 @@
         <li class="divider-vertical"></li>
         <li class="active"><a href="https://sviewer.multiomics.info?usi=NIST:cptac2_human_hcd_itraq_selected_part2_2015.msp:index:600801">Example</a></li>
         <li class="divider-vertical"></li>
-<!--        <li class><a href="https://www.proteomicsdb.org/use_dev/?usi=mzspec:PXD005175:CRC_iTRAQ_06:scan:11803:VEYTLGEESEAPGQR/3&usi_origin=jpost">Example (jPOST)</a></li>-->
-<!--        <li class="divider-vertical"></li>-->
-<!--        <li class><a href="https://www.proteomicsdb.org/use_dev/?usi=mzspec:PXD000561:Adult_Frontalcortex_bRP_Elite_85_f09:scan:17555:VLHPLEGAVVIIFK/2&usi_origin=peptideatlas">Example (PeptideAtlas)</a></li>-->
-<!--        <li class="divider-vertical"></li>-->
-<!--        <li class><a href="https://www.proteomicsdb.org/use_dev/?usi=mzspec:PXD000561:Adult_Frontalcortex_bRP_Elite_85_f09:scan:17555:VLHPLEGAVVIIFK/2&usi_origin=peptideatlas&usibottom=mzspec:PXD015890:18May18_Olson_WT2.raw%20(F001551).mzid_18May18_Olson_WT2.raw_(F001551).MGF:index:6913:AEAEAQAEELSFPR/2&usibottom_origin=pride">Example (Comparison)</a></li>-->
-       <!-- <li class="divider-vertical"></li>
-        <li>
-            <a class="github-button" href="https://github.com/kusterlab/ipsa" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star kusterlab/ipsa on GitHub">Star</a>
-          <a>
-            Please be aware that not all features have been implemented yet
-          </a>
-        </li> -->
+      
+                <li class="divider-vertical"></li>
+       
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <ul><a href="https://multiomics.info/"><img src="http://multiomics.info/logo-mdb-small.png"></a></ul>
       </ul>
-    </nav>
+    </nav> -->
+    <div class="nav-container">
+      <span class="left">
+        <a class="logo">
+          <img src="http://multiomics.info/logo-mdb-small.png" width="120" height="40">
+        </a>
+      </span>
+      <span class="right">  
+        <a>Universal Spectrum explorer</a>
+        <a style="margin:0 5px">|</a>
+        <a href="https://sviewer.multiomics.info?usi=NIST:cptac2_human_hcd_itraq_selected_part2_2015.msp:index:600801">Example</a>
+      </span>
+    </div>
     <div class="container-fluid">
       <div id = "gray-overlay">
         <div ng-controller="MasterCtrl">
@@ -81,13 +86,18 @@
             {{busy.loaded}}
           </div>
           <div class="row">
+            <div class="button-wrapper">
+              <button type="submit" class="btn btn-success" ng-click="processData()">Generate Chart</button>
+              <button class="btn btn-primary" ng-click="downloadData()">Export Data</button>
+              <button svg-download title="{{peptideBottom.sequence}}" class="btn btn-primary">Download as SVG</button>
+            </div>
             <div ng-controller="PeptideCtrl">
               <div ng-controller="GraphCtrl">
                 <div class="col-md-5">
                   <div class="panel panel-default">
-                    <div class="panel-heading">
+                    <!-- <div class="panel-heading">
                       <h3 class="panel-title">Annotation Options</h3>
-                    </div>
+                    </div> -->
                     <uib-tabset vertical="true" type="pills" justified="true" class="tabs-left">
                       <uib-tab heading="Top Spectrum" select="renderTable()">
                         <uib-accordion close-others="true">
@@ -124,13 +134,15 @@
                                 <br/>
                                 <div ng-controller="DataCtrl">
                                   <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-12">
                                       <label for="charge">Max Fragment Charge</label>
                                       <div class="input-group-md">
                                         <input type="number" class="form-control" id="charge" placeholder=1 min="{{peptide.fragmentMin}}" max="{{peptide.fragmentMax}}" ng-model="peptide.charge" ng-blur="validateFragmentCharge()">
                                       </div>
                                     </div>
-                                    <div class="col-md-4">
+                                  </div>
+                                  <div class="row" style="margin-top: 15px">
+                                    <div class="col-md-12">
                                       <label for="sequence">Precursor Charge</label>
                                       <div class="input-group-md">
                                         <input type="number" class="form-control" placeholder="2" ng-model="peptide.precursorCharge" ng-blur="validateCharge()">
@@ -138,22 +150,11 @@
                                     </div>
                                   </div>
                                   <br/>
-                                  <div ng-controller="HotCtrlTop">
-                                    <div class="row">
-                                      <div class="col-md-12">
-                                        <label for="handsonTable">Enter Spectral Data Here</label>
-                                        <div handsontabletest id="topTable"></div>
-                                      </div>
-                                      <div class="col-md-12">
-                                        <button class="btn btn-primary pull-right" type="button" ng-click="reset()">Clear table</button>
-                                      </div>
-                                    </div>
-                                  </div>
                                   <div class="row">
                                     <div class="col-md-12">
                                       <label for="dataFormat">Select Peptide Modifications</label>
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-12">
                                       <div ng-controller="ModCtrl">
                                         <div class="form-group-lg">
                                           <ui-select multiple ng-model="modObject.selectedMods" search-enabled="true">
@@ -163,7 +164,20 @@
                                         </div>
                                       </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary" ng-click="openModal()">Define Mods</button>
+                                    <div class="col-md-12">
+                                      <button type="button" class="btn btn-primary" style="margin: 15px 0;" ng-click="openModal()">Define Mods</button>
+                                    </div>
+                                  </div>
+                                  <div ng-controller="HotCtrlTop">
+                                    <div class="row" style="margin-top: 15px">
+                                      <div class="col-md-12">
+                                        <label for="handsonTable">Enter Spectral Data Here</label>
+                                        <div handsontabletest id="topTable"></div>
+                                      </div>
+                                      <div class="col-md-12">
+                                        <button class="btn btn-primary pull-right" type="button" ng-click="reset()">Clear table</button>
+                                      </div>
+                                    </div>
                                   </div>
                                   <br/>
                                 </div>
@@ -280,20 +294,38 @@
                                 <br/>
                                 <div ng-controller="DataCtrl">
                                   <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-12">
                                       <label for="charge">Max Fragment Charge</label>
                                       <div class="input-group-md">
                                         <input type="number" class="form-control" id="charge" placeholder=1 min="{{peptideBottom.fragmentMin}}" max="{{peptideBottom.fragmentMax}}" ng-model="peptideBottom.charge" ng-blur="validateFragmentCharge(false)">
                                       </div>
                                     </div>
-                                    <div class="col-md-4">
-                                      <label for="sequence">Precursor Charge</label>
+                                    <div class="col-md-12">
+                                      <label for="sequence" style="margin-top: 15px">Precursor Charge</label>
                                       <div class="input-group-md">
                                         <input type="number" class="form-control" placeholder="2" ng-model="peptideBottom.precursorCharge" ng-blur="validateCharge(false)">
                                       </div>
                                     </div>
                                   </div>
                                   <br/>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <label for="dataFormat">Select Peptide Modifications</label>
+                                    </div>
+                                    <div class="col-md-12">
+                                      <div ng-controller="ModCtrl">
+                                        <div class="form-group-lg">
+                                          <ui-select multiple ng-model="modObjectBottom.selectedMods" search-enabled="true">
+                                            <ui-select-match placeholder="Select peptide modifications..."> <span ng-bind="modSelectOption($item, false)"></span> </ui-select-match>
+                                            <ui-select-choices repeat="mod in modsBottom | filter: $select.search"> <span ng-bind="modSelectOption(mod, false)"></span> </ui-select-choices>
+                                          </ui-select>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                      <button type="button" class="btn btn-primary" style="margin: 15px 0" ng-click="openModal()">Define Mods</button>
+                                    </div>
+                                  </div>
                                   <div ng-controller="HotCtrlBottom">
                                     <div class="row">
                                       <div class="col-md-12">
@@ -311,25 +343,9 @@
                                         </hot-table>
                                       </div>
                                       <div class="col-md-12">
-                                        <button class="btn btn-primary pull-right" type="button" ng-click="resetBottom()">Clear table</button>
+                                        <button class="btn btn-primary pull-right" type="button" style="margin: 15px 0" ng-click="resetBottom()">Clear table</button>
                                       </div>
                                     </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-md-12">
-                                      <label for="dataFormat">Select Peptide Modifications</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                      <div ng-controller="ModCtrl">
-                                        <div class="form-group-lg">
-                                          <ui-select multiple ng-model="modObjectBottom.selectedMods" search-enabled="true">
-                                            <ui-select-match placeholder="Select peptide modifications..."> <span ng-bind="modSelectOption($item, false)"></span> </ui-select-match>
-                                            <ui-select-choices repeat="mod in modsBottom | filter: $select.search"> <span ng-bind="modSelectOption(mod, false)"></span> </ui-select-choices>
-                                          </ui-select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <button type="button" class="btn btn-primary" ng-click="openModal()">Define Mods</button>
                                   </div>
                                   <br/>
                                 </div>
@@ -434,8 +450,8 @@
                         <div class="panel-body">
                           <div class="col-md-12">
                             <div ng-controller="DataCtrl">
-                              <div class="row">
-                                <div class="col-md-4">
+                              <div class="row" style="margin-top: 15px">
+                                <div class="col-md-3">
                                   <div class="row">
                                     <div class="col-md-12">
                                       <label>N-terminal</label>
@@ -452,7 +468,7 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                   <div class="row">
                                     <div class="col-md-12">
                                       <label>C-terminal</label>
@@ -469,7 +485,7 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                   <div class="row">
                                     <div class="col-md-12">
                                       <label>Neutral Losses</label>
@@ -488,22 +504,22 @@
                               </div>
                               <br/>
                               <div class="row">
-                                <div class="col-md-6">
-                                  <label>Annotation Fragment Tolerance (+/-)</label>
-                                  <div class="input-group">
-                                    <input type="number" class="form-control" ng-model="cutoffs.tolerance" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapToleranceType()">{{cutoffs.toleranceType}}</button> </span>
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <label>Annotation Matching Threshold</label>
+                                <div class="col-md-12">
+                                  <label style="margin-top: 15px">Annotation Matching Threshold</label>
                                   <div class="input-group">
                                     <input type="number" class="form-control" ng-model="cutoffs.matchingCutoff" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapMatchingType()">{{cutoffs.matchingType}}</button> </span>
+                                  </div>
+                                </div>
+                                <div class="col-md-12">
+                                  <label style="margin-top: 15px">Annotation Fragment Tolerance (+/-)</label>
+                                  <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="cutoffs.tolerance" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapToleranceType()">{{cutoffs.toleranceType}}</button> </span>
                                   </div>
                                 </div>
                               </div>
                               <br/>
                               <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                   <label>Comparison Matching Tolerance (+/-)</label>
                                   <div class="input-group">
                                     <input type="number" class="form-control" ng-model="cutoffs.compTolerance" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapCompToleranceType()">{{cutoffs.compToleranceType}}</button> </span>
@@ -566,20 +582,6 @@
 
                       </uib-tab>
                     </uib-tabset>
-                    <div class="panel-body">
-                      <div class="col-md-12">
-                        <div ng-controller="DataCtrl">
-                          <br/>
-                          <div class="row">
-                            <div class="col-md-12">
-                              <button type="submit" class="btn btn-success" ng-click="processData()">Generate Chart</button>
-                              <button class="btn btn-primary" ng-click="downloadData()">Export Data</button>
-                              <button svg-download title="{{peptideBottom.sequence}}" class="btn btn-primary">Download as SVG</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
                 <div class="col-md-7">
